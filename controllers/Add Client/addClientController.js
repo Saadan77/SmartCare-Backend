@@ -1,4 +1,6 @@
 const addClientModel = require("../../models/Add Client/addClientModel");
+const { sendEmail } = require("../../services/emailService");
+const { sendSMS } = require("../../services/smsService");
 
 const getAllClients = async (req, res) => {
   try {
@@ -31,6 +33,20 @@ const creatClient = async (req, res) => {
       dbPassword,
       createdBy
     );
+
+    // Send Email Notification to Admin
+    await sendEmail(
+      "saadanjawad50@gmail.com",
+      "New Client Registered", // Email subject
+      `A new client "${name}" has been successfully added by ${adminUser}.` // Email body
+    );
+
+    // Send SMS Notification to Admin
+    await sendSMS(
+      "+923213101228",
+      `New Client Added: "${name}" by ${adminUser}.`
+    );
+
     res.status(201).json(insertedClient);
   } catch (err) {
     console.error("Error creating client:", err);
