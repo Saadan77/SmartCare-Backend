@@ -38,14 +38,33 @@ const creatClient = async (req, res) => {
     await sendEmail(
       "saadanjawad50@gmail.com",
       "New Client Registered", // Email subject
-      `A new client "${name}" has been successfully added by ${adminUser}.` // Email body
+      `A new client "Saadan" has been successfully added by ${adminUser}.` // Email body
+    );
+
+    await sendEmail(
+      "warishatulfatima@gmail.com",
+      "New Client Registered", // Email subject
+      `A new client "Warisha" has been successfully added by ${adminUser}.` // Email body
+    );
+
+    await sendEmail(
+      "h.s.dawray992@gmail.com",
+      "New Client Registered", // Email subject
+      `A new client "Haya" has been successfully added by ${adminUser}.` // Email body
     );
 
     // Send SMS Notification to Admin
     await sendSMS(
       "+923213101228",
-      `New Client Added: "${name}" by ${adminUser}.`
+      `New Client Added: "Saadan" by ${adminUser}.`
     );
+
+    await sendSMS(
+      "+923063377168",
+      `New Client Added: "Warisha" by ${adminUser}.`
+    );
+
+    await sendSMS("+923108545803", `New Client Added: "Haya" by ${adminUser}.`);
 
     res.status(201).json(insertedClient);
   } catch (err) {

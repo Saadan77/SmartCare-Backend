@@ -1,11 +1,11 @@
 const sql = require("mssql");
 
 const dbConfig = {
-  user: "sa",
+  user: "hmis",
   password: "hms$1234",
   server: "localhost",
   port: 1433,
-  database: "hmis_db",
+  database: "hmis",
   options: {
     encrypt: false,
     trustServerCertificate: true,
