@@ -107,6 +107,16 @@ async function sendWeeklyDiseaseSMS(disease) {
   }
 }
 
+async function getPredictedDisease() {
+  try {
+    const response = await axios.get("http://localhost:8000/predict-outbreak");
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching predicted outbreak:", error);
+    return null;
+  }
+}
+
 async function sendWeeklyDiseaseNotification() {
   const disease = await getMostWidespreadDisease();
   if (!disease) {
@@ -118,4 +128,49 @@ async function sendWeeklyDiseaseNotification() {
   await sendWeeklyDiseaseSMS(disease);
 }
 
-module.exports = { sendWeeklyDiseaseNotification };
+async function sendPredictedDiseaseNotification() {
+  const predictedDisease = await getPredictedDisease();
+  if (!predictedDisease || predictedDisease.error) {
+    console.error("No disease prediction available.");
+    return;
+  }
+
+  const { disease, predicted_cases, growth_rate } = predictedDisease;
+  const preventiveMessage = getPreventiveMessage(disease);
+
+  // Email Notification
+  const emailRecipients = ["saadanjawad50@gmail.com"];
+  const emailSubject = `🦠 Disease Outbreak Alert: ${disease} Expected Next Week!`;
+  const emailContent = `
+        <p><b>🚨 Alert: ${disease} Cases Expected to Rise!</b></p>
+        <p>📊 Predicted Cases: ${predicted_cases} (+${growth_rate})</p>
+        ${preventiveMessage}
+    `;
+
+  try {
+    for (const email of emailRecipients) {
+      await sendEmail(email, emailSubject, emailContent);
+    }
+    console.log("✅ Predicted Disease Email Sent!");
+  } catch (error) {
+    console.error("❌ Error sending predicted disease email:", error.message);
+  }
+
+  // SMS Notification
+  const phoneNumbers = ["+923213101228"];
+  const smsMessage = `🚨 Health Alert! ${disease} cases are expected to rise next week (+${growth_rate}%). Stay safe!`;
+
+  try {
+    for (const number of phoneNumbers) {
+      await sendSMS(number, smsMessage);
+    }
+    console.log("✅ Predicted Disease SMS Sent!");
+  } catch (error) {
+    console.error("❌ Error sending predicted disease SMS:", error);
+  }
+}
+
+module.exports = {
+  sendWeeklyDiseaseNotification,
+  sendPredictedDiseaseNotification,
+};

@@ -24,7 +24,20 @@ const updateEmployeeRoutes = require("./routes/Employee/Update Employee/updateEm
 const ManageStandardOrganizationRoutes = require("./routes/Organization/Manage Standard Organization/manageStandardOrganizationRoutes");
 const ManageOrganizationRoutes = require("./routes/Organization/Manage Organization/manageOrganizationRoutes");
 
-const { sendWeeklyDiseaseNotification } = require("./services/diseaseNotificationService");
+const {
+  sendWeeklyDiseaseNotification,
+  sendPredictedDiseaseNotification,
+} = require("./services/diseaseNotificationService");
+
+app.get("/test-prediction-notification", async (req, res) => {
+  try {
+    await sendPredictedDiseaseNotification();
+    res.send("✅ Weekly Prediction Notification Sent!");
+  } catch (error) {
+    console.error("❌ Error sending notification:", error);
+    res.status(500).send("Error sending notification.");
+  }
+});
 
 app.get("/test-disease-notification", async (req, res) => {
   try {
