@@ -16,11 +16,11 @@ const sql = require("mssql");
 
 // Regex Config
 const dbConfig = {
-  user: "sa",
-  password: "hms$1234",
+  user: "hmis",
+  password: "hmis$1234",
   server: "localhost",
   port: 1433,
-  database: "hmis_db",
+  database: "hmis",
   options: {
     encrypt: false,
     trustServerCertificate: true,
