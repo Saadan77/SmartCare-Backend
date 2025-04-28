@@ -11,8 +11,6 @@ app.use(cors());
 app.use(express.json());
 
 // Import routes
-const authRoutes = require("./routes/authRoutes");
-const patientsRoutes = require("./routes/PatientsRoutes");
 const addClientRoutes = require("./routes/Add Client/addClientRoutes");
 const addGroupRoutes = require("./routes/Service Setup/Add Group/addGroupRoutes");
 const addSubGroupRoutes = require("./routes/Service Setup/Add SubGroup/addSubGroupRoutes");
@@ -23,6 +21,10 @@ const searchEmployeeRoutes = require("./routes/Employee/Search Employee/searchEm
 const updateEmployeeRoutes = require("./routes/Employee/Update Employee/updateEmployeeRoutes");
 const ManageStandardOrganizationRoutes = require("./routes/Organization/Manage Standard Organization/manageStandardOrganizationRoutes");
 const ManageOrganizationRoutes = require("./routes/Organization/Manage Organization/manageOrganizationRoutes");
+
+const authRoutes = require("./routes/authRoutes");
+const patientsRoutes = require("./routes/PatientsRoutes");
+const appointmentRoutes = require("./routes/Appointments/appointmentRoutes");
 
 const {
   sendWeeklyDiseaseNotification,
@@ -52,10 +54,11 @@ app.get("/test-disease-notification", async (req, res) => {
 // Authentication Routes
 app.use("/api/auth", authRoutes);
 
-// Protected API Routes using middleware
+// Protected API Routes using middleware - FYP routes
 app.use("/api", patientsRoutes);
-app.use("/api", addClientRoutes);
+app.use('/api', appointmentRoutes);
 
+app.use("/api", addClientRoutes);
 app.use("/api/addGroup", verifyToken, authorizeRoles("admin"), addGroupRoutes);
 app.use(
   "/api/addSubGroup",
