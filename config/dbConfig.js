@@ -1,22 +1,9 @@
 const sql = require("mssql");
 
 // Personal Computer
-// const dbConfig = {
-//   user: "hmis",
-//   password: "hmis$1234",
-//   server: "localhost",
-//   port: 1433,
-//   database: "hmis",
-//   options: {
-//     encrypt: false,
-//     trustServerCertificate: true,
-//   },
-// };
-
-// Regex Config
 const dbConfig = {
-  user: "sa",
-  password: "hms$1234",
+  user: "hmis",
+  password: "hmis$1234",
   server: "localhost",
   port: 1433,
   database: "hmis",
@@ -25,6 +12,19 @@ const dbConfig = {
     trustServerCertificate: true,
   },
 };
+
+// Regex Config
+// const dbConfig = {
+//   user: "sa",
+//   password: "hms$1234",
+//   server: "localhost",
+//   port: 1433,
+//   database: "hmis",
+//   options: {
+//     encrypt: false,
+//     trustServerCertificate: true,
+//   },
+// };
 
 async function connectToDatabase() {
   try {

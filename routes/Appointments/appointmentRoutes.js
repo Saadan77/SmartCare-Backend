@@ -13,4 +13,11 @@ router.get(
   appointmentsController.getAllAppointments
 );
 
+router.get(
+  "/appointments/user/:userId",
+  verifyToken,
+  authorizeRoles("patient", "admin", "doctor"),
+  appointmentsController.getAppointmentsByUser
+);
+
 module.exports = router;

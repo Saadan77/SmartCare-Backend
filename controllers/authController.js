@@ -30,7 +30,7 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.json({ token, role: user.role });
+    res.json({ token, role: user.role, id: user.id });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
