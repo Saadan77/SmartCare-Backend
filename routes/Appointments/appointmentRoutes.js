@@ -20,4 +20,11 @@ router.get(
   appointmentsController.getAppointmentsByUser
 );
 
+router.get(
+  "/appointments/familynames/:userId",
+  verifyToken,
+  authorizeRoles("patient"),
+  appointmentsController.getFamilyNames
+);
+
 module.exports = router;

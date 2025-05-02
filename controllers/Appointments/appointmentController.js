@@ -1,5 +1,6 @@
 const appointmentModel = require("../../models/Appointments/appointmentModel");
 const dayjs = require("dayjs");
+const familyMemberNames = require("../../models/Appointments/appointmentModel");
 
 const getAllAppointments = async (req, res) => {
   try {
@@ -18,7 +19,9 @@ const getAppointmentsByUser = async (req, res) => {
     const appointments = await appointmentModel.getAppointmentsByUserId(userId);
 
     if (!appointments.length) {
-      return res.status(404).json({ message: "No appointments found for this user." });
+      return res
+        .status(404)
+        .json({ message: "No appointments found for this user." });
     }
 
     const formattedAppointments = appointments.map((a) => ({
@@ -36,7 +39,19 @@ const getAppointmentsByUser = async (req, res) => {
   }
 };
 
+const getFamilyNames = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const family_names = await familyMemberNames.getFamilyMemberNames(userId);
+    res.json(family_names);
+  } catch (error) {
+    console.log("Error fetching names by id:", error);
+    res.status(500).send("Error fetching family member names");
+  }
+};
+
 module.exports = {
   getAllAppointments,
   getAppointmentsByUser,
+  getFamilyNames,
 };

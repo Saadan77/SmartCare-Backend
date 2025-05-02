@@ -29,7 +29,22 @@ const getAppointmentsByUserId = async (userId) => {
   }
 };
 
+const getFamilyMemberNames = async (userId) => {
+  try {
+    const names = await sql.query`
+    SELECT id, full_name, family_member_id
+    FROM dbo.FamilyMembers
+    WHERE id = ${userId}
+    `;
+    return names.recordset;
+  } catch (error) {
+    console.log("Error fetching names by user ID:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   getAllAppointments,
   getAppointmentsByUserId,
+  getFamilyMemberNames,
 };
