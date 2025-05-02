@@ -1,6 +1,7 @@
 const appointmentModel = require("../../models/Appointments/appointmentModel");
 const dayjs = require("dayjs");
 const familyMemberNames = require("../../models/Appointments/appointmentModel");
+const doctorNamesModel = require("../../models/Appointments/appointmentModel");
 
 const getAllAppointments = async (req, res) => {
   try {
@@ -50,8 +51,26 @@ const getFamilyNames = async (req, res) => {
   }
 };
 
+const getDoctorNamesController = async (req, res) => {
+  try {
+    const doctor_names = await doctorNamesModel.getDoctorNames();
+
+    const formattedDoctorsAndTime = doctor_names.map((d) => ({
+      ...d,
+      start_time: dayjs(d.start_time).format("HH:mm"),
+      end_time: dayjs(d.end_time).format("HH:mm"),
+    }));
+
+    res.json(formattedDoctorsAndTime);
+  } catch (error) {
+    console.log("Controller: Error fetching doctor names:", error);
+    res.status(500).send("Controller Status: Error fetching doctor names");
+  }
+};
+
 module.exports = {
   getAllAppointments,
   getAppointmentsByUser,
   getFamilyNames,
+  getDoctorNamesController,
 };

@@ -43,8 +43,20 @@ const getFamilyMemberNames = async (userId) => {
   }
 };
 
+const getDoctorNames = async () => {
+  try {
+    const doctorNames = await sql.query`SELECT doctor_name, start_time, end_time from dbo.Doctors`;
+    console.log("Model: Doctor Names = ", doctorNames.recordset);
+    return doctorNames.recordset;
+  } catch (error) {
+    console.log("Error fetching doctor names:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   getAllAppointments,
   getAppointmentsByUserId,
   getFamilyMemberNames,
+  getDoctorNames
 };
