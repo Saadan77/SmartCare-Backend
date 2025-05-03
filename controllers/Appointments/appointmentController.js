@@ -2,6 +2,7 @@ const appointmentModel = require("../../models/Appointments/appointmentModel");
 const dayjs = require("dayjs");
 const familyMemberNames = require("../../models/Appointments/appointmentModel");
 const doctorNamesModel = require("../../models/Appointments/appointmentModel");
+const createAppointmentController = require("../../models/Appointments/appointmentModel");
 
 const getAllAppointments = async (req, res) => {
   try {
@@ -68,9 +69,42 @@ const getDoctorNamesController = async (req, res) => {
   }
 };
 
+const createAppointmentControllerMethod = async (req, res) => {
+  const {
+    id,
+    family_member_id,
+    doctor_id,
+    appointment_date,
+    appointment_time,
+    reason,
+    status,
+  } = req.body;
+
+  try {
+    const appointmentModelData =
+      await createAppointmentController.createAppointmentModel(
+        id,
+        family_member_id,
+        doctor_id,
+        appointment_date,
+        appointment_time,
+        reason,
+        status
+      );
+
+    res.status(201).json(appointmentModelData);
+  } catch (error) {
+    console.error("Controller: Error creating appointment:", error);
+    res
+      .status(500)
+      .send("Controller Status: Error creating appointment:", error);
+  }
+};
+
 module.exports = {
   getAllAppointments,
   getAppointmentsByUser,
   getFamilyNames,
   getDoctorNamesController,
+  createAppointmentControllerMethod,
 };

@@ -45,7 +45,8 @@ const getFamilyMemberNames = async (userId) => {
 
 const getDoctorNames = async () => {
   try {
-    const doctorNames = await sql.query`SELECT doctor_name, start_time, end_time from dbo.Doctors`;
+    const doctorNames =
+      await sql.query`SELECT doctor_name, start_time, end_time from dbo.Doctors`;
     console.log("Model: Doctor Names = ", doctorNames.recordset);
     return doctorNames.recordset;
   } catch (error) {
@@ -54,9 +55,32 @@ const getDoctorNames = async () => {
   }
 };
 
+const createAppointmentModel = async (
+  id,
+  family_member_id,
+  doctor_id,
+  appointment_date,
+  appointment_time,
+  reason,
+  status
+) => {
+  try {
+    const appointmentData = await sql.query`
+    INSERT INTO dbo.[Appointments] ([id],[family_member_id], [doctor_id], [appointment_date], [appointment_time], [reason], [status])
+    OUTPUT INSERTED.*
+    VALUES (${id}, ${family_member_id}, ${doctor_id}, ${appointment_date}, ${appointment_time}, ${reason}, ${status})
+    `;
+    return appointmentData.recordset;
+  } catch (error) {
+    console.log("Model: Error creating appointment:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   getAllAppointments,
   getAppointmentsByUserId,
   getFamilyMemberNames,
-  getDoctorNames
+  getDoctorNames,
+  createAppointmentModel,
 };

@@ -31,7 +31,14 @@ router.get(
   "/appointments/doctornames",
   verifyToken,
   authorizeRoles("patient", "admin"),
-  appointmentsController.getDoctorNamesController,
+  appointmentsController.getDoctorNamesController
+);
+
+router.post(
+  "/appointments/createAppointment/:userId",
+  verifyToken,
+  authorizeRoles("patient", "doctor"),
+  appointmentsController.createAppointmentControllerMethod
 );
 
 module.exports = router;
