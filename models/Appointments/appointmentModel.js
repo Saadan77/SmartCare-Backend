@@ -46,7 +46,7 @@ const getFamilyMemberNames = async (userId) => {
 const getDoctorNames = async () => {
   try {
     const doctorNames =
-      await sql.query`SELECT doctor_name, start_time, end_time from dbo.Doctors`;
+      await sql.query`SELECT doctor_id, doctor_name, start_time, end_time from dbo.Doctors`;
     console.log("Model: Doctor Names = ", doctorNames.recordset);
     return doctorNames.recordset;
   } catch (error) {
@@ -66,9 +66,17 @@ const createAppointmentModel = async (
 ) => {
   try {
     const appointmentData = await sql.query`
-    INSERT INTO dbo.[Appointments] ([id],[family_member_id], [doctor_id], [appointment_date], [appointment_time], [reason], [status])
-    OUTPUT INSERTED.*
-    VALUES (${id}, ${family_member_id}, ${doctor_id}, ${appointment_date}, ${appointment_time}, ${reason}, ${status})
+      INSERT INTO dbo.[Appointments] ([id], [family_member_id], [doctor_id], [appointment_date], [appointment_time], [reason], [status])
+      OUTPUT INSERTED.*
+      VALUES (
+        ${id}, 
+        ${family_member_id}, 
+        ${doctor_id}, 
+        ${appointment_date}, 
+        CAST(${appointment_time} AS TIME), -- Cast to TIME to store only the time portion
+        ${reason}, 
+        ${status}
+      )
     `;
     return appointmentData.recordset;
   } catch (error) {

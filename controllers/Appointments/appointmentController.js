@@ -4,6 +4,8 @@ const familyMemberNames = require("../../models/Appointments/appointmentModel");
 const doctorNamesModel = require("../../models/Appointments/appointmentModel");
 const createAppointmentController = require("../../models/Appointments/appointmentModel");
 
+const { sql } = require("../../config/dbConfig");
+
 const getAllAppointments = async (req, res) => {
   try {
     const appointments = await appointmentModel.getAllAppointments();
@@ -92,12 +94,43 @@ const createAppointmentControllerMethod = async (req, res) => {
         status
       );
 
-    res.status(201).json(appointmentModelData);
+    const appointment = appointmentModelData[0];
+
+    const familyMemberResult = await sql.query`
+      SELECT full_name FROM dbo.FamilyMembers WHERE family_member_id = ${family_member_id}
+    `;
+
+    const doctorResult = await sql.query`
+      SELECT doctor_name FROM dbo.Doctors WHERE doctor_id = ${doctor_id}
+    `;
+
+    const familyMemberName =
+      familyMemberResult.recordset.length > 0
+        ? familyMemberResult.recordset[0].full_name
+        : null;
+
+    const doctorName =
+      doctorResult.recordset.length > 0
+        ? doctorResult.recordset[0].doctor_name
+        : null;
+
+    const formattedTime = new Date(appointment.appointment_time)
+      .toISOString()
+      .substring(11, 16);
+
+    const responseData = {
+      ...appointment,
+      appointment_time: formattedTime,
+      family_member_name: familyMemberName,
+      doctor_name: doctorName,
+    };
+
+    res.status(201).json(responseData);
   } catch (error) {
     console.error("Controller: Error creating appointment:", error);
     res
       .status(500)
-      .send("Controller Status: Error creating appointment:", error);
+      .json({ error: "Failed to create appointment", details: error.message });
   }
 };
 
