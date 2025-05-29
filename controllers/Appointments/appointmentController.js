@@ -31,7 +31,9 @@ const getAppointmentsByUser = async (req, res) => {
     const formattedAppointments = appointments.map((a) => ({
       ...a,
       appointment_date: dayjs(a.appointment_date).format("YYYY-MM-DD"),
-      appointment_time: dayjs(a.appointment_time).format("HH:mm"),
+      appointment_time: new Date(a.appointment_time)
+        .toISOString()
+        .substring(11, 16),
       created_at: dayjs(a.created_at).format("YYYY-MM-DD"),
       updated_at: dayjs(a.updated_at).format("YYYY-MM-DD"),
     }));
